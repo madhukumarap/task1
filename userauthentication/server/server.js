@@ -3,10 +3,12 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2/promise');
+const cors = require('cors');
+
 const app = express();
-const cors = require('cors')
 const PORT = 5000;
 const secretKey = 'abcd1234';
+
 const dbConfig = {
     host: 'localhost',
     user: 'root',
@@ -15,7 +17,8 @@ const dbConfig = {
 };
 
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors());
+
 // Middleware to authenticate and set req.userId and req.userRole from JWT
 const authenticateJWT = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -33,6 +36,7 @@ const authenticateJWT = (req, res, next) => {
     }
 };
 
+// Register endpoint
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -48,9 +52,10 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Endpoint for user login and JWT token generation
+// Login endpoint
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
+    console.log(req.body)
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
@@ -69,6 +74,7 @@ app.post('/login', async (req, res) => {
 
         // Generating the JWT token
         const token = jwt.sign({ userId: user.id, role: user.role_id }, secretKey, { expiresIn: '1h' });
+        console.log(token)
         res.json({ token });
         
     } catch (error) {
@@ -77,15 +83,25 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Endpoint for user profile retrieval
-app.get('/profile', authenticateJWT, (req, res) => {
-    res.json({ userId: req.userId, role: req.userRole });
+// Profile endpoint
+app.get('/profile', authenticateJWT, async (req, res) => {
+    const connection = await mysql.createConnection(dbConfig);
+    const [rows] = await connection.execute('SELECT username, role_id FROM users WHERE id = ?', [req.userId]);
+    await connection.end();
+
+    if (rows.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ username: rows[0].username, role: rows[0].role_id });
 });
 
+// Admin endpoint to get all users
 app.get('/admin/users', authenticateJWT, async (req, res) => {
     if (req.userRole !== 'admin') {
         return res.status(403).json({ error: 'Unauthorized' });
     }
+
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT id, username, role_id FROM users');

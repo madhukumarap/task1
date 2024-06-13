@@ -4,17 +4,21 @@ import axios from 'axios';
 const LoginForm = ({ setLoggedIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+  
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+           
             const response = await axios.post('http://localhost:5000/login', {
                 username,
                 password
             });
+            
             const token = response.data.token;
+            console.log(response.data)
             localStorage.setItem('token', token);
             setLoggedIn(true);
+            window.location.replace("/profile")
         } catch (error) {
             console.error('Error logging in:', error);
         }
@@ -36,7 +40,7 @@ const LoginForm = ({ setLoggedIn }) => {
                     </div>
                     <div className="mb-6">
                         <input
-                            type="password" // Changed type to password for password input
+                            type="password"
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}

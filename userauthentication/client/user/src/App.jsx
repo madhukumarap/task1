@@ -5,7 +5,7 @@ import Profile from './Profile';
 import axios from 'axios';
 axios.defaults.baseURL = "http://localhost:5000/";
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token'));
 
   return (
     <Router>

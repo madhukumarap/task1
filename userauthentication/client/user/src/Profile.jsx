@@ -1,27 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+
 const Profile = () => {
-    const [userData, setUserData] = useState(null)
-    useEffect(()=>{
-        const fetchProfile = async()=>{
-            const token = localStorage.getItem('token')
-            if(!token){
-                return 
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return;
             }
+
             try {
                 const response = await axios.get('http://localhost:5000/profile', {
-                    headers:{
-                        Authorization:`Bearer ${token}`
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
-                })
-                console.log(response.data)
-                setUserData(response)
+                });
+
+                setUserData(response.data);
             } catch (error) {
                 console.error('Profile fetch error:', error);
             }
-        }
-        fetchProfile()
-    },[])
+        };
+
+        fetchProfile();
+    }, []);
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
@@ -36,6 +41,6 @@ const Profile = () => {
             </div>
         </div>
     );
-}
+};
 
-export default Profile
+export default Profile;
