@@ -7,5 +7,6 @@ router.get('/getemployees',employeeController.getEmployees);
 router.get('/getemployeesbyid/:id',employeeController.getEmployeesById);
 router.put('/updateemployees/:id',employeeController.updateEmployee)
 router.delete('/deletemployees/:id',employeeController.deleteEmployee)
-
+router.get('/getoneemployeesbyid/:id',employeeController.getEmployeesById1)
+// getEmployeesById1
 module.exports = router

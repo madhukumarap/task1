@@ -3,7 +3,7 @@ import { Form, Modal, Input, Button, message } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-const EditAddress = ({ employee_id }) => {
+const EditEmployee = ({ employee_id }) => {
   const [visible, setVisible] = useState(false);
   const [formData, setFormData] = useState({
     address_line1: '',
@@ -13,29 +13,19 @@ const EditAddress = ({ employee_id }) => {
     zip_code: ''
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/addresses/${employee_id}`);
       const addressData = response.data;
-
-      // Update formData state with fetched data
-      setFormData({
-        address_line1: addressData.address_line1,
-        address_line2: addressData.address_line2,
-        city: addressData.city,
-        state: addressData.state,
-        zip_code: addressData.zip_code
-      });
+      
+      setFormData(addressData)
     } catch (error) {
       console.log('Error fetching address:', error);
     }
   };
 
-  const showModal = () => {
+  const showModal = async () => {
+    await fetchData();
     setVisible(true);
   };
 
@@ -62,15 +52,17 @@ const EditAddress = ({ employee_id }) => {
       [fieldName]: value
     });
   };
-
+console.log(formData)
+ 
+  
   return (
     <>
       <Button type="primary" onClick={showModal} icon={<EditOutlined />} />
       <Modal
         title="Edit Address"
         visible={visible}
+
         onCancel={handleCancel}
-        initialValues={formData||{}}
         footer={[
           <Button key="cancel" onClick={handleCancel}>
             Cancel
@@ -80,38 +72,33 @@ const EditAddress = ({ employee_id }) => {
           </Button>,
         ]}
       >
-        <Form layout="vertical">
+        <Form layout="vertical" initialValues={formData || {}}>
           <Form.Item name="address_line1" label="Address Line 1">
             <Input
-              placeholder="Enter Address Line 1"
-              value={formData.address_line1}
+              value={formData.address_line2}
               onChange={(e) => handleChange('address_line1', e.target.value)}
             />
           </Form.Item>
           <Form.Item name="address_line2" label="Address Line 2">
             <Input
-              placeholder="Enter Address Line 2"
               value={formData.address_line2}
               onChange={(e) => handleChange('address_line2', e.target.value)}
             />
           </Form.Item>
           <Form.Item name="city" label="City">
             <Input
-              placeholder="Enter City"
               value={formData.city}
               onChange={(e) => handleChange('city', e.target.value)}
             />
           </Form.Item>
           <Form.Item name="state" label="State">
             <Input
-              placeholder="Enter State"
               value={formData.state}
               onChange={(e) => handleChange('state', e.target.value)}
             />
           </Form.Item>
           <Form.Item name="zip_code" label="Zip Code">
             <Input
-              placeholder="Enter Zip Code"
               value={formData.zip_code}
               onChange={(e) => handleChange('zip_code', e.target.value)}
             />
@@ -122,4 +109,4 @@ const EditAddress = ({ employee_id }) => {
   );
 };
 
-export default EditAddress;
+export default EditEmployee;

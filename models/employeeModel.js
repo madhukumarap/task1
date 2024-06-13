@@ -43,7 +43,19 @@ const Employee = {
       }
     );
   },
-
+  findById1: (id, callback) => {
+    db.query(
+      "SELECT * FROM employees WHERE id = ?",
+      [id],
+      (err, employeeResult) => {
+        if (err) {
+          return callback(err, null);
+        }
+        // Pass the employeeResult to the callback function
+        return callback(null, employeeResult);
+      }
+    );
+  },
   update: (id, employee, callback) => {
     const query =
       "UPDATE employees SET name = ?, email = ?, position = ? WHERE id = ?";

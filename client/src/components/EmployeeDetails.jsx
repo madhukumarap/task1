@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Button, Modal, message } from 'antd';
-import { EyeOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import AddAddress from './AddAddress';
 import AddEmployees from './AddEmployees';
 import EditAddress from './EditAddress';
+import EditEmployee from './EditEmployee';
+
 const EmployeeDetails = () => {
   const [employeeData, setEmployeeData] = useState([]);
   const [employeeAddress, setEmployeeAddress] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [editMode, setEditMode] = useState(false); // State to manage edit mode
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -53,9 +55,9 @@ const EmployeeDetails = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/deletemployees/${id}`)
-      message.success('Employee deleted successfully')
-      setEmployeeData(employeeData.filter(emp => emp.id !== id))
+      await axios.delete(`http://localhost:8080/api/deletemployees/${id}`);
+      message.success('Employee deleted successfully');
+      setEmployeeData(employeeData.filter(emp => emp.id !== id));
     } catch (error) {
       console.error('Error deleting employee:', error);
       message.error('Failed to delete employee');
@@ -90,16 +92,34 @@ const EmployeeDetails = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      filters: employeeData.map(employee => ({
+        text: employee.name,
+        value: employee.name,
+      })),
+      onFilter: (value, record) => record.name.includes(value),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      sorter: (a, b) => a.email.localeCompare(b.email),
+      filters: employeeData.map(employee => ({
+        text: employee.email,
+        value: employee.email,
+      })),
+      onFilter: (value, record) => record.email.includes(value),
     },
     {
       title: 'Position',
       dataIndex: 'position',
       key: 'position',
+      sorter: (a, b) => a.position.localeCompare(b.position),
+      filters: employeeData.map(employee => ({
+        text: employee.position,
+        value: employee.position,
+      })),
+      onFilter: (value, record) => record.position.includes(value),
     },
     {
       title: 'Actions',
@@ -108,36 +128,46 @@ const EmployeeDetails = () => {
         <div className='flex gap-2'>
           <Button icon={<EyeOutlined />} onClick={() => handleModalOpen(record.id)} />
           <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} />
+          <EditEmployee employee_id={record.id} />
         </div>
       ),
     },
   ];
+
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
 
   const addressColumns = [
     {
       title: 'Address Line 1',
       dataIndex: 'address_line1',
       key: 'address_line1',
+      sorter: (a, b) => a.address_line1.localeCompare(b.address_line1),
     },
     {
       title: 'Address Line 2',
       dataIndex: 'address_line2',
       key: 'address_line2',
+      sorter: (a, b) => a.address_line2.localeCompare(b.address_line2),
     },
     {
       title: 'City',
       dataIndex: 'city',
       key: 'city',
+      sorter: (a, b) => a.city.localeCompare(b.city),
     },
     {
       title: 'State',
       dataIndex: 'state',
       key: 'state',
+      sorter: (a, b) => a.state.localeCompare(b.state),
     },
     {
       title: 'Zip Code',
       dataIndex: 'zip_code',
       key: 'zip_code',
+      sorter: (a, b) => a.zip_code.localeCompare(b.zip_code),
     },
     {
       title: 'Actions',
@@ -145,7 +175,7 @@ const EmployeeDetails = () => {
       render: (text, record) => (
         <div className='flex gap-2'>
           <Button icon={<DeleteOutlined />} onClick={() => handleDeleteAddress(record.id)} />
-           <EditAddress employee_id={record.id} />
+          <EditAddress employee_id={record.id} />
         </div>
       ),
     },
@@ -157,7 +187,7 @@ const EmployeeDetails = () => {
         <h2 className="text-2xl font-bold mb-4">Employee List</h2>
         <AddEmployees />
       </div>
-      <Table dataSource={employeeData} columns={columns} rowKey="id" />
+      <Table dataSource={employeeData} columns={columns} rowKey="id" onChange={onChange} />
 
       <Modal
         title={editMode ? 'Edit Address' : 'Employee Details'}
