@@ -12,7 +12,7 @@ const LoginForm = ({ setLoggedIn }) => {
                 username,
                 password
             });
-            const token = response.data.token; // Assuming the token is in response.data.token
+            const token = response.data.token;
             localStorage.setItem('token', token);
             setLoggedIn(true);
         } catch (error) {
