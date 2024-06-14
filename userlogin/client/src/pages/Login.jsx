@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Logo from "./logo.png";
-import { useUser } from "./UserContext"; // Ensure correct path
+
 
 const Login = () => {
-  const { updateUser } = useUser();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -23,11 +23,7 @@ const Login = () => {
       console.log(res.data);
       const { token, user } = res.data;
       console.log(user.email);
-      updateUser({
-        email: user.email,
-        username: user.name,
-        token: token,
-      });
+      
       localStorage.setItem('userData', JSON.stringify({ email: user.email, username: user.name, token: token }));
       window.location.replace('/profile'); 
     } catch (err) {

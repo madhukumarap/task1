@@ -60,7 +60,29 @@ app.post('/register', async (req, res) => {
     }
   });
   
-
+app.get('/user',(req,res)=>{
+  const  {email} = req.query;
+  if(!email){
+    return res.status(400).json({ msg: 'Email is required' });
+  }
+  try {
+    const query = 'SELECT media_outlet, name, job_title, web_address, email FROM users WHERE email=?'
+    connection.query(query,[email],(err,result)=>{
+      if(err){
+        console.error('Error executing query:', err);
+        res.status(500).json({ msg: 'An error occurred while fetching the user details' });
+        return;
+      }
+      if(result.length === 0){
+        return res.status(404).json({ msg: 'User not found' });
+      }
+      res.status(200).json(result[0])
+    })
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).json({ msg: 'An error occurred while fetching the user details' });
+  }
+})
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
