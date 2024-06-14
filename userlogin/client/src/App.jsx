@@ -4,11 +4,11 @@ import Signup from './pages/Signup'
 import Logedin from "./pages/Login"
 import Forgetpassword from './pages/Forgetpassword';
 import Profile from './pages/Profile';
-import { UserProvider } from './pages/UserContext'; 
+// import { UserProvider } from './pages/UserContext'; 
 function App() {
 
   return (
-    <UserProvider>
+  
     <Router>
       <Routes>
         <Route path="/signup" element={<Signup />} />
@@ -18,7 +18,7 @@ function App() {
         <Route path="/" element={<Navigate to="/signup" />} />
       </Routes>
     </Router>
-    </UserProvider>
+   
   )
 }
 

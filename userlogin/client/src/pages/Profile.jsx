@@ -1,16 +1,16 @@
-// Profile.js
 import React from 'react';
-import { useUser } from './UserContext'; // Import the useUser hook
+import { useUser } from './UserContext';
 
 const Profile = () => {
-  const { userData } = useUser(); // Get userData from context
+  const { userData } = useUser();
+  const storedUserData = JSON.parse(localStorage.getItem('userData'));
 
   return (
     <div>
-      {userData ? (
+      {storedUserData ? (
         <div>
-          <p>Email: {userData.email}</p>
-          <p>Username: {userData.username}</p>
+          <p>Email: {storedUserData.email}</p>
+          <p>Username: {storedUserData.username}</p>
         </div>
       ) : (
         <p>No user data available</p>

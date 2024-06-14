@@ -2,30 +2,34 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Logo from "./logo.png";
-import { useUser } from "./UserContext";
+import { useUser } from "./UserContext"; // Ensure correct path
 
 const Login = () => {
   const { updateUser } = useUser();
-  const [formdata, setFormData] = useState({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formdata, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/login', formdata);
+      const res = await axios.post('http://localhost:5000/login', formData);
       alert('Login successful!');
       console.log(res.data);
+      const { token, user } = res.data;
+      console.log(user.email);
       updateUser({
-        email: formdata.email,
-        username: res.data.username,
+        email: user.email,
+        username: user.name,
+        token: token,
       });
-      window.location.replace('/profile'); // Redirect to the profile page
+      localStorage.setItem('userData', JSON.stringify({ email: user.email, username: user.name, token: token }));
+      window.location.replace('/profile'); 
     } catch (err) {
       alert('Login failed!');
       console.error(err);
@@ -53,7 +57,7 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="Enter email address"
-                value={formdata.email}
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>
@@ -63,7 +67,7 @@ const Login = () => {
                 type="password"
                 name="password"
                 placeholder="Enter password"
-                value={formdata.password}
+                value={formData.password}
                 onChange={handleChange}
               />
             </div>
