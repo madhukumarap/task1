@@ -1,97 +1,157 @@
 .parent {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FFC300;
-    width: 100%;
-    height: 100vh;
-}
-
-.container1 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    width: 70%;
-    padding: 20px;
-    margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FFD34E;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border: 0px solid #FFC300; /* Add your desired border color and width */
 }
 
 .imagecontainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  bottom: 10px;
+  display: grid;
+  flex-direction: column;
+}
+
+.container1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  width: 50%;
+  padding: 20px;
+  margin: 20px;
 }
 
 .containerchild {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .content {
-    color: black;
-    font-size: medium;
-    font-weight: bold;
+  color: black;
+  font-size: medium;
+  font-weight: bold;
 }
 
-.content1,
+.content1 {
+  margin: 10px 0;
+  text-align: center;
+  font-size: 24px;
+  font-family: lato;
+
+}
 .content2 {
-    margin: 10px 0;
-    text-align: center;
+  margin: 10px 0;
+  text-align: center;
+  font-size: 18px;
+  font-family: lato;
+  color: #544F4D;
+  
 }
-
 .login {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
+  background-color: #fff;
+  color: #544F4D;
+  border: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .container2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: grid;
+  align-items: center;
+  justify-content: start;
+  width: 60%;
+  height: 100%;
+  background-color: white;
+  padding-left: 20px;
+  padding-right: 20px; 
+  box-shadow: 10px white;
+}
+
+.signin {
+  color: black;
+  font-size: larger;
+  font-weight: bold;
+  font-family: lato;
+  font-size: 26px;
+}
+
+.para {
+  color: #888888;
+  font-size: 16px;
+  font-family: lato;
+}
+
+.formcontainer {
+  width: 100%;
+  height: 100%;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  margin: 10px 0;
+  width: 100%;
+  height: 60px;
+ 
 }
+.form-group1{
+  display: flex;
+}
+span{
+  color: #89CFF0;
+  font-size: 16px;
+  font-family: lato;
 
+}
 label {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
+  color: #544F4D;
+  font-size: 16px;
+  font-family: lato;
+  align-items: start;
 }
 
-input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+input[type="text"],[type="email"],[type="password"] {
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  color: black;
+  box-sizing: border-box;
 }
 
 input[type="checkbox"] {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .signup {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 20px;
+  background-color: #FFD34E;
+  color: #544F4D;
+  font-family: lato;
+  font-size: 16px;
+  border: none;
+  width: 100%;
+ 
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+
 }
