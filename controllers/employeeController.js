@@ -12,11 +12,20 @@ const createEmployee = (req, res) => {
 };
 
 const getEmployees = (req, res) => {
-  Employee.findAll((err, result) => {
+  const { page = 1, pageSize = 5 } = req.query;
+  const offset = (page - 1) * pageSize;
+
+  Employee.findAllPaginated(offset, pageSize, (err, result) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      res.status(200).send(result);
+      Employee.count((err, count) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.status(200).send({ data: result, total: count });
+        }
+      });
     }
   });
 };

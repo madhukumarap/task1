@@ -14,17 +14,24 @@ const EmployeeDetails = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 5, total: 0 });
 
   useEffect(() => {
-    fetchData();
+    fetchData(pagination.current, pagination.pageSize);
     fetchData1();
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (page, pageSize) => {
     try {
-      const response = await axios.get("http://localhost:8080/api/getemployees");
-      setEmployeeData(response.data);
-      console.log(response.data);
+      const response = await axios.get("http://localhost:8080/api/getemployees", {
+        params: { page, pageSize },
+      });
+      setEmployeeData(response.data.data);
+      setPagination({
+        ...pagination,
+        total: response.data.total,
+      });
+      console.log(response.data)
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +41,7 @@ const EmployeeDetails = () => {
     try {
       const response = await axios.get("http://localhost:8080/api/employees/addresses");
       setEmployeeAddress(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -87,6 +94,10 @@ const EmployeeDetails = () => {
     setEditMode(true);
   };
 
+  const handleTableChange = (pagination) => {
+    fetchData(pagination.current, pagination.pageSize);
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -133,10 +144,6 @@ const EmployeeDetails = () => {
       ),
     },
   ];
-
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
 
   const addressColumns = [
     {
@@ -187,7 +194,18 @@ const EmployeeDetails = () => {
         <h2 className="text-2xl font-bold mb-4">Employee List</h2>
         <AddEmployees />
       </div>
-      <Table dataSource={employeeData} columns={columns} rowKey="id" onChange={onChange} />
+      <Table
+        dataSource={employeeData}
+        columns={columns}
+        rowKey="id"
+        pagination={{
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          total: pagination.total,
+          showSizeChanger: true,
+        }}
+        onChange={handleTableChange}
+      />
 
       <Modal
         title={editMode ? 'Edit Address' : 'Employee Details'}
