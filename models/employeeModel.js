@@ -12,11 +12,12 @@ const Employee = {
 
   findAllPaginated: (offset, limit, callback) => {
     const query = "SELECT * FROM employees LIMIT ?, ?";
-    db.query(query, [offset, parseInt(limit)], callback);
+    db.query(query, [parseInt(offset, 10), parseInt(limit, 10)], callback);
   },
 
   count: (callback) => {
-    db.query('SELECT COUNT(*) AS count FROM employees', (err, results) => {
+    const query = 'SELECT COUNT(*) AS count FROM employees';
+    db.query(query, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -26,12 +27,15 @@ const Employee = {
   },
 
   findById: (id, callback) => {
-    db.query("SELECT * FROM employees WHERE id = ?", [id], (err, employeeResult) => {
+    const employeeQuery = "SELECT * FROM employees WHERE id = ?";
+    const addressQuery = "SELECT * FROM addresses WHERE employee_id = ?";
+    
+    db.query(employeeQuery, [id], (err, employeeResult) => {
       if (err) {
         return callback(err, null);
       }
 
-      db.query("SELECT * FROM addresses WHERE employee_id = ?", [id], (err, addressResult) => {
+      db.query(addressQuery, [id], (err, addressResult) => {
         if (err) {
           return callback(err, null);
         }
@@ -47,7 +51,8 @@ const Employee = {
   },
 
   findById1: (id, callback) => {
-    db.query("SELECT * FROM employees WHERE id = ?", [id], (err, employeeResult) => {
+    const query = "SELECT * FROM employees WHERE id = ?";
+    db.query(query, [id], (err, employeeResult) => {
       if (err) {
         return callback(err, null);
       }
@@ -61,7 +66,8 @@ const Employee = {
   },
 
   delete: (id, callback) => {
-    db.query("DELETE FROM employees WHERE id = ?", [id], callback);
+    const query = "DELETE FROM employees WHERE id = ?";
+    db.query(query, [id], callback);
   },
 };
 

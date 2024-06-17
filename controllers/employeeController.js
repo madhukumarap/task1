@@ -12,23 +12,33 @@ const createEmployee = (req, res) => {
 };
 
 const getEmployees = (req, res) => {
-  const { page = 1, pageSize = 5 } = req.query;
+  const { page = 1, pageSize = 10 } = req.query;
   const offset = (page - 1) * pageSize;
+  
 
-  Employee.findAllPaginated(offset, pageSize, (err, result) => {
+  
+  const pageNumber = parseInt(page, 10);
+  const pageSizeNumber = parseInt(pageSize, 10);
+
+  if (isNaN(pageNumber) || isNaN(pageSizeNumber)) {
+    return res.status(400).send({ error: 'Invalid pagination parameters' });
+  }
+  console.log(page, offset);
+  Employee.findAllPaginated(offset, pageSizeNumber, (err, result) => {
     if (err) {
-      res.status(500).send(err);
+      return res.status(500).send(err);
     } else {
       Employee.count((err, count) => {
         if (err) {
-          res.status(500).send(err);
+          return res.status(500).send(err);
         } else {
-          res.status(200).send({ data: result, total: count });
+          return res.status(200).send({ data: result, total: count });
         }
       });
     }
   });
 };
+
 
 const getEmployeesById = (req, res) => {
   const { id } = req.params;

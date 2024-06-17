@@ -31,6 +31,8 @@ const EmployeeDetails = () => {
         ...pagination,
         total: response.data.total,
       });
+      console.log(pagination,response.data.total)
+      console.log(pagination,response.data.total)
       console.log(response.data)
     } catch (error) {
       console.log(error);
@@ -95,7 +97,12 @@ const EmployeeDetails = () => {
   };
 
   const handleTableChange = (pagination) => {
-    fetchData(pagination.current, pagination.pageSize);
+    // fetchData(pagination.current, pagination.pageSize);
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize
+    })
   };
 
   const columns = [
